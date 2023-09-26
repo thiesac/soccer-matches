@@ -7,6 +7,7 @@ class TeamService {
 
   public async getAll(): Promise<ServiceResponse<ITeam[]>> {
     const data = await this.teamModel.findAll();
+    console.log(data);
     // const mappedData = data.map((team) => team.toJSON());
     return { status: 'SUCCESSFUL', data };
   }
