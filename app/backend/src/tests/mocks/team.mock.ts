@@ -1,11 +1,11 @@
-const mockAllTeams = [
+const allTeams = [
   { id: 1, teamName: 'Avaí/Kindermann' },
   { id: 2, teamName: 'Bahia' },
 ];
 
-const mockOneTeam = { id: 1, teamName: 'Avaí/Kindermann' };
+const oneTeam = { id: 1, teamName: 'Avaí/Kindermann' };
 
 export default {
-  mockAllTeams,
-  mockOneTeam,
+  allTeams,
+  oneTeam,
 }

@@ -27,13 +27,12 @@ describe('Seu teste', () => {
     });
 
     it('Should return a list of teams', async () => {
-      findAllStub.resolves(mockTeams.mockAllTeams);
+      findAllStub.resolves(mockTeams.allTeams);
 
       const res = await chai.request(app).get('/teams');
 
-      expect(res.body).to.deep.equal(mockTeams.mockAllTeams);
+      expect(res.body).to.deep.equal(mockTeams.allTeams);
       expect(res.status).to.equal(200);
-      // expect(Array.isArray(res.body)).to.be.true;
       expect(res.body[0]).to.have.property('id');
       expect(res.body[0]).to.have.property('teamName');
     });
@@ -50,12 +49,12 @@ describe('Seu teste', () => {
     });
 
     it('Should return data of a specific team when a valid id is provided', async () => {
-      findOneStub.resolves(mockTeams.mockOneTeam);
+      findOneStub.resolves(mockTeams.oneTeam);
 
       const res = await chai.request(app).get('/teams/1');
 
       expect(res.status).to.equal(200);
-      expect(res.body).to.deep.equal(mockTeams.mockOneTeam);
+      expect(res.body).to.deep.equal(mockTeams.oneTeam);
     });
   });
 });
