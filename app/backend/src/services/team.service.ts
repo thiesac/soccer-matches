@@ -7,8 +7,8 @@ class TeamService {
 
   public async getAll(): Promise<ServiceResponse<ITeam[]>> {
     const data = await this.teamModel.findAll();
-    const mappedData = data.map((team) => team.toJSON());
-    return { status: 'SUCCESSFUL', data: mappedData };
+    // const mappedData = data.map((team) => team.toJSON());
+    return { status: 'SUCCESSFUL', data };
   }
 
   public async getById(id: number): Promise<ServiceResponse<ITeam | null>> {
