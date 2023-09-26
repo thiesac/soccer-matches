@@ -1,6 +1,6 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '.';
-import Match from '../../Interfaces/Match';
+import Match from '../../Interfaces/IMatch';
 
 class MatchModel extends Model<Match> {
   public id!: number;

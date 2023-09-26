@@ -1,16 +1,18 @@
-import { DataTypes, Model } from 'sequelize';
+import {
+  CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model,
+} from 'sequelize';
 import sequelize from '.';
-import User from '../../Interfaces/User';
 
-class UserModel extends Model<User> {
-  public id!: number;
-  public username!: string;
-  public role!: string;
-  public email!: string;
-  private password!: string;
+class SequelizeUser extends Model<InferAttributes<SequelizeUser>,
+InferCreationAttributes<SequelizeUser>> {
+  declare id: CreationOptional<number>;
+  declare username: string;
+  declare role: string;
+  declare email: string;
+  declare password: string;
 }
 
-UserModel.init(
+SequelizeUser.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -43,4 +45,4 @@ UserModel.init(
   },
 );
 
-export default UserModel;
+export default SequelizeUser;

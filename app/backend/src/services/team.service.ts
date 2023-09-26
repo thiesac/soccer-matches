@@ -1,17 +1,19 @@
-import Team from '../Interfaces/Team';
-import TeamModel from '../database/models/TeamModel';
+import { ServiceResponse } from '../Interfaces/ServiceResponse';
+import TeamModel from '../database/models/SequelizeTeam';
+import ITeam from '../Interfaces/ITeam';
 
 class TeamService {
   private teamModel = TeamModel;
 
-  public async getAll(): Promise<Team[]> {
+  public async getAll(): Promise<ServiceResponse<ITeam[]>> {
     const data = await this.teamModel.findAll();
-    return data.map((team) => team.toJSON());
+    const mappedData = data.map((team) => team.toJSON());
+    return { status: 'SUCCESSFUL', data: mappedData };
   }
 
-  public async getById(id: number): Promise<Team | null> {
+  public async getById(id: number): Promise<ServiceResponse<ITeam | null>> {
     const data = await this.teamModel.findByPk(id);
-    return data;
+    return { status: 'SUCCESSFUL', data };
   }
 }
 

@@ -1,4 +1,4 @@
-import TeamModel from "../../database/models/TeamModel";
+import TeamModel from "../../database/models/SequelizeTeam";
 
 const newTeamsAll = [
   new TeamModel({ id: 1, teamName: 'Avaí/Kindermann' }),
