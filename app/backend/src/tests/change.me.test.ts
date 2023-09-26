@@ -9,6 +9,7 @@ import Example from '../database/models/ExampleModel';
 import { Response } from 'superagent';
 import TeamModel from '../database/models/TeamModel';
 import mockTeams from './mocks/team.mock'
+import TeamService from '../services/team.service';
 
 chai.use(chaiHttp);
 
@@ -19,23 +20,25 @@ describe('Seu teste', () => {
     let findAllStub: sinon.SinonStub;
 
     beforeEach(() => {
-      findAllStub = sinon.stub(TeamModel, 'findAll');
+      findAllStub = sinon.stub(TeamModel, 'findAll').resolves(mockTeams.newTeamsAll);
     });
 
     afterEach(() => {
-      sinon.restore();
+      findAllStub.restore();
     });
 
-    it('Should return a list of teams', async () => {
-      findAllStub.resolves(mockTeams.allTeams);
-
-      const res = await chai.request(app).get('/teams');
-
-      expect(res.body).to.deep.equal(mockTeams.allTeams);
-      expect(res.status).to.equal(200);
-      expect(res.body[0]).to.have.property('id');
-      expect(res.body[0]).to.have.property('teamName');
-    });
+    it('Should return a list of teams', (done) => {
+      chai
+        .request(app)
+        .get('/teams')
+        .end((err, res) => {
+          expect(err).to.be.null;
+          expect(res).to.have.status(200);
+          expect(res.body).to.be.an('array');
+          expect(res.body).to.deep.equal(mockTeams.allTeams);
+          done();
+        });
+    })
   });
 
   describe('Endpoint /teams/:id', () => {
