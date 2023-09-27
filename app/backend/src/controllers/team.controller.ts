@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import TeamService from '../services/team.service';
-import mapStatusHTTP from '../utils/mapStatusHTTP';
 
 class TeamController {
   private teamService: TeamService;
@@ -20,9 +19,7 @@ class TeamController {
 
     const data = await this.teamService.getById(numberId);
 
-    if (data.status !== 'SUCCESSFUL') {
-      return res.status(mapStatusHTTP(data.status)).json;
-    }
+    if (!data) res.status(400).json({ error: 'Invalid ID' });
 
     res.status(200).json(data);
   }

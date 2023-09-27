@@ -2,7 +2,7 @@ import { DataTypes, Model } from 'sequelize';
 import sequelize from '.';
 import Match from '../../Interfaces/IMatch';
 
-class MatchModel extends Model<Match> {
+class SequelizeModel extends Model<Match> {
   public id!: number;
   public homeTeamGoals!: number;
   public homeTeamId!: number;
@@ -11,7 +11,7 @@ class MatchModel extends Model<Match> {
   public inProgress!: boolean;
 }
 
-MatchModel.init(
+SequelizeModel.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -48,4 +48,4 @@ MatchModel.init(
   },
 );
 
-export default MatchModel;
+export default SequelizeModel;
