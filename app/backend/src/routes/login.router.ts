@@ -4,7 +4,9 @@ import UserService from '../services/user.service';
 
 const LoginRouter = express.Router();
 
-const userService = new UserService();
+const secretKey = 'secret_admin';
+
+const userService = new UserService(secretKey);
 const loginController = new LoginController(userService);
 
 LoginRouter.post('/', (req, res) => {

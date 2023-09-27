@@ -12,8 +12,9 @@ class LoginController {
     const loginData = req.body;
     const serviceResponse = await this.userService.findByEmail(loginData);
 
-    if (!serviceResponse) {
-      return res.status(400).json({ message: 'User not found' });
+    // dica do Coruja, vai aceitar a mensagem mesmo que 'message' não tenha sido definido na interface LoginResponse
+    if ('message' in serviceResponse) {
+      return res.status(400).json({ message: serviceResponse.message });
     }
 
     return res.status(200).json(serviceResponse);
