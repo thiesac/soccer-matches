@@ -7,7 +7,6 @@ class TeamService {
 
   public async getAll(): Promise<ITeam[]> {
     const data = await this.teamModel.findAll();
-    // const mappedData = data.map((team) => team.toJSON());
     return data;
   }
 

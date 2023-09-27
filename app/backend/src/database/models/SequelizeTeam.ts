@@ -2,7 +2,7 @@ import {
   CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model,
 } from 'sequelize';
 import sequelize from '.';
-import SequelizeModel from './SequelizeModel';
+import SequelizeMatches from './SequelizeMatches';
 
 class SequelizeTeam extends Model<InferAttributes<SequelizeTeam>,
 InferCreationAttributes<SequelizeTeam>> {
@@ -31,7 +31,7 @@ SequelizeTeam.init(
   },
 );
 
-SequelizeTeam.hasMany(SequelizeModel, { foreignKey: 'homeTeamId', as: 'homeMatches' });
-SequelizeTeam.hasMany(SequelizeModel, { foreignKey: 'awayTeamId', as: 'awayMatches' });
+SequelizeTeam.hasMany(SequelizeMatches, { foreignKey: 'homeTeamId', as: 'homeMatches' });
+SequelizeTeam.hasMany(SequelizeMatches, { foreignKey: 'awayTeamId', as: 'awayMatches' });
 
 export default SequelizeTeam;
