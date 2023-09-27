@@ -13,12 +13,12 @@ class UserService {
   private userModel = UserModel;
 
   async findByEmail(loginData: IUserLogin): Promise<IUserLogin | ErrorResponse | null> {
-    const { error } = loginSchema.validate({ loginData });
+    const { email, password } = loginData;
+    const { error } = loginSchema.validate({ email, password });
 
     if (error) {
       return { status: 400, data: { message: error.message } };
     }
-    const { email } = loginData;
     const user = await this.userModel.findOne({ where: { email } });
     return user;
   }

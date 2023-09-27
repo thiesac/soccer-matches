@@ -9,7 +9,7 @@ class LoginController {
   }
 
   async login(req: Request, res: Response): Promise<Response> {
-    const { loginData } = req.body;
+    const loginData = req.body;
     const serviceResponse = await this.userService.findByEmail(loginData);
 
     if (!serviceResponse) {
