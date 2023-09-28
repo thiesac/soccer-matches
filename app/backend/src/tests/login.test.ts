@@ -39,7 +39,7 @@ describe('LOGIN', () => {
         });
 
       expect(res).to.have.status(200);
-
+      expect(res.body).to.have.property('token').that.is.a('string');
     })
   })
 })
