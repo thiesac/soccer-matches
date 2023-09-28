@@ -41,5 +41,18 @@ describe('LOGIN', () => {
       expect(res).to.have.status(200);
       expect(res.body).to.have.property('token').that.is.a('string');
     })
+
+    it('should return 401 with message "Invalid email or password" for an invalid email format', async () => {
+      const res = await chai
+        .request(app)
+        .post('/login')
+        .send({
+          email: 'notemail.com',
+          password: 'password123',
+        });
+
+      expect(res).to.have.status(401);
+      expect(res.body).to.have.property('message', 'Invalid email or password');
+    });
   })
 })
