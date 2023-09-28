@@ -11,7 +11,7 @@ class LoginController {
   async login(req: Request, res: Response): Promise<Response> {
     const loginData = req.body;
     const serviceResponse = await this.userService.findByEmail(loginData);
-    console.log(serviceResponse);
+
     // dica do Coruja, vai aceitar a mensagem mesmo que 'message' não tenha sido definido na interface LoginResponse
     if ('message' in serviceResponse) {
       if (serviceResponse.message === 'All fields must be filled') {
