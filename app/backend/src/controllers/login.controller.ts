@@ -20,6 +20,9 @@ class LoginController {
       if (serviceResponse.message === 'Invalid email or password') {
         return res.status(401).json({ message: serviceResponse.message });
       }
+      if (serviceResponse.message === '"password" length must be at least 6 characters long') {
+        return res.status(400).json({ message: serviceResponse.message });
+      }
     }
 
     return res.status(200).json(serviceResponse);
