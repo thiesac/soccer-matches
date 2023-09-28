@@ -1,3 +1,4 @@
+import bcrypt = require ('bcryptjs');
 import JwtToken from '../auth/JwtToken';
 import { IUserLogin } from '../Interfaces/IUser';
 import UserModel from '../database/models/SequelizeUser';
@@ -27,14 +28,34 @@ class UserService {
       return { message: error.message };
     }
 
-    const user = await this.userModel.findOne({ where: { email } });
-    if (!user) {
-      return { message: 'User not found' };
+    const user = await this.findUserByEmail(email);
+
+    if (!user || !this.isValidPassword(user, password)) {
+      return { message: 'Invalid email or password' };
     }
 
-    const token = this.jwtToken.generateToken({ sub: user?.id.toString(), email: user?.email });
+    const token = this.generateToken(user);
 
     return { token };
+  }
+
+  private async findUserByEmail(email: string): Promise<UserModel | null> {
+    return this.userModel.findOne({ where: { email } });
+  }
+
+  // using arrow function so I do not have to use 'this' just because eslint requested
+  private isValidPassword = (user: UserModel, password: string): boolean => {
+    if (!user.password || typeof user.password !== 'string') {
+      return false;
+    }
+    return bcrypt.compareSync(password, user.password);
+  };
+
+  private generateToken(user: UserModel): string {
+    return this.jwtToken.generateToken({
+      sub: user.id.toString(),
+      email: user.email,
+    });
   }
 }
 

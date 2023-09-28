@@ -14,7 +14,12 @@ class LoginController {
 
     // dica do Coruja, vai aceitar a mensagem mesmo que 'message' não tenha sido definido na interface LoginResponse
     if ('message' in serviceResponse) {
-      return res.status(400).json({ message: serviceResponse.message });
+      if (serviceResponse.message === 'All fields must be filled') {
+        return res.status(400).json({ message: serviceResponse.message });
+      }
+      if (serviceResponse.message === 'Invalid email or password') {
+        return res.status(401).json({ message: serviceResponse.message });
+      }
     }
 
     return res.status(200).json(serviceResponse);
