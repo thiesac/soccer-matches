@@ -4,6 +4,7 @@ interface JwtPayload {
   sub: string;
   email: string;
   exp?: number;
+  role: string;
 }
 
 class JwtToken {
