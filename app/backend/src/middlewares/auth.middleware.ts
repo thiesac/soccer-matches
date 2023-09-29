@@ -1,9 +1,8 @@
 import jwt = require('jsonwebtoken');
 import { Request, Response, NextFunction } from 'express';
 
+const secretKey = process.env.JWT_SECRET || 'jwt_secret';
 class AuthMiddleware {
-  private secretKey = process.env.JWT_SECRET || 'jwt_secret';
-
   static validateToken(req: Request, res: Response, next: NextFunction): Response | void {
     const { authorization } = req.headers;
 
@@ -15,7 +14,7 @@ class AuthMiddleware {
 
     try {
       console.log('é o token', token);
-      req.body.token = jwt.verify(token, 'jwt_secret');
+      req.body.token = jwt.verify(token, secretKey);
       next();
     } catch (err) {
       return res.status(401).json({ message: 'Token must be a valid token' });
