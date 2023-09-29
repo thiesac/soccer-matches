@@ -14,27 +14,30 @@ export default {
       },
       homeTeamGoals: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
+        field: 'home_team_goals',
       },
       homeTeamId: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        autoIncrement: false,
-        primaryKey: false,
+        references: { model: 'teams', key: 'id' },
+        field: 'home_team_id',
       },
       awayTeamId: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        autoIncrement: false,
-        primaryKey: false,
+        references: { model: 'teams', key: 'id' },
+        field: 'away_team_id',
       },
       awayTeamGoals: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
+        field: 'away_team_goals',
       },
       inProgress: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
+        field: 'in_progress',
       }
     });
   },

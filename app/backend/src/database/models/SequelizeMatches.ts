@@ -1,8 +1,9 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '.';
-import Match from '../../Interfaces/IMatch';
+import SequelizeTeam from './SequelizeTeam';
+import IMatch from '../../Interfaces/IMatch';
 
-class SequelizeMatches extends Model<Match> {
+class SequelizeMatches extends Model<IMatch> {
   public id!: number;
   public homeTeamGoals!: number;
   public homeTeamId!: number;
@@ -44,8 +45,14 @@ SequelizeMatches.init(
     sequelize,
     tableName: 'matches',
     timestamps: false,
-    underscored: true,
+    // underscored: true,
   },
 );
+
+SequelizeTeam.hasMany(SequelizeMatches, { foreignKey: 'homeTeamId', as: 'homeMatches' });
+SequelizeTeam.hasMany(SequelizeMatches, { foreignKey: 'awayTeamId', as: 'awayMatches' });
+
+SequelizeMatches.belongsTo(SequelizeTeam, { foreignKey: 'homeTeamId', as: 'homeTeam' });
+SequelizeMatches.belongsTo(SequelizeTeam, { foreignKey: 'awayTeamId', as: 'awayTeam' });
 
 export default SequelizeMatches;
