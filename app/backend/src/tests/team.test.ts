@@ -4,12 +4,10 @@ import * as chai from 'chai';
 import chaiHttp = require('chai-http');
 
 import { app } from '../app';
-import Example from '../database/models/ExampleModel';
-
 import { Response } from 'superagent';
 import SequelizeTeam from '../database/models/SequelizeTeam';
 import mockTeams from './mocks/team.mock'
-import TeamService from '../services/team.service';
+
 
 chai.use(chaiHttp);
 
@@ -19,7 +17,7 @@ afterEach(() => {
 });
 
 describe('TEAM', () => {
-  describe('Endpoint /teams', () => {
+  describe('Endpoint GET /teams', () => {
     let findAllStub: sinon.SinonStub;
 
     beforeEach(() => {
@@ -33,7 +31,7 @@ describe('TEAM', () => {
         });
     })
 
-  describe('Endpoint /teams/:id', () => {
+  describe('Endpoint GET /teams/:id', () => {
     let findOneStub: sinon.SinonStub;
 
     beforeEach(() => {

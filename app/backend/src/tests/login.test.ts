@@ -17,7 +17,7 @@ afterEach(() => {
 });
 
 describe('LOGIN', () => {
-  describe('endpoint /login', () => {
+  describe('endpoint GET /login', () => {
     let validToken: string;
 
     // beforeEach(async () => {
@@ -60,7 +60,7 @@ describe('LOGIN', () => {
       expect(res.body).to.have.property('message', 'Invalid email or password');
     });
 
-    describe('endpoint /login/role', () => {
+    describe('endpoint POST /login/role', () => {
       beforeEach(async () => {
         const loginResponse = await chai
           .request(app)
@@ -84,23 +84,23 @@ describe('LOGIN', () => {
             expect(res.body).to.deep.equal({ role: 'admin' });
           });
 
-        // it('should return a 401 status with "Token not found" message when no token is provided', async () => {
-        //   const res = await chai.request(app).get('/login/role');
+        it('should return a 401 status with "Token not found" message when no token is provided', async () => {
+          const res = await chai.request(app).get('/login/role');
 
-        //   expect(res).to.have.status(401);
-        //   expect(res.body).to.deep.equal({ message: 'Token not found' });
-        // });
+          expect(res).to.have.status(401);
+          expect(res.body).to.deep.equal({ message: 'Token not found' });
+        });
 
-        // it('should return a 401 status with "Token must be a valid token" message with an invalid token', async () => {
-        //   const invalidToken = 'invalid_token_here';
-        //   const res = await chai
-        //     .request(app)
-        //     .get('/login/role')
-        //     .set('authorization', `Bearer ${invalidToken}`);
+        it('should return a 401 status with "Token must be a valid token" message with an invalid token', async () => {
+          const invalidToken = 'invalid_token_here';
+          const res = await chai
+            .request(app)
+            .get('/login/role')
+            .set('authorization', `Bearer ${invalidToken}`);
 
-        //   expect(res).to.have.status(401);
-        //   expect(res.body).to.deep.equal({ message: 'Token must be a valid token' });
-        // });
+          expect(res).to.have.status(401);
+          expect(res.body).to.deep.equal({ message: 'Token must be a valid token' });
+        });
 
       })
     })
