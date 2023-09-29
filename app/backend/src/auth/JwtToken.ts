@@ -1,10 +1,11 @@
 import jwt = require('jsonwebtoken');
 
 interface JwtPayload {
-  sub: string;
+  id: number;
   email: string;
   exp?: number;
   role: string;
+  username: string;
 }
 
 class JwtToken {

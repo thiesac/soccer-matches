@@ -53,9 +53,10 @@ class UserService {
 
   private generateToken(user: UserModel): string {
     return this.jwtToken.generateToken({
-      sub: user.id.toString(),
+      id: user.id,
       email: user.email,
       role: user.role,
+      username: user.username,
     });
   }
 }

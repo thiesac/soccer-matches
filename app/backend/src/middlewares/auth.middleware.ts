@@ -2,26 +2,24 @@ import jwt = require('jsonwebtoken');
 import { Request, Response, NextFunction } from 'express';
 
 class AuthMiddleware {
-  private secretKey: string;
+  private secretKey = process.env.JWT_SECRET || 'jwt_secret';
 
-  constructor(secretKey: string) {
-    this.secretKey = secretKey;
-  }
-
-  validateToken(req: Request, res: Response, next: NextFunction): Response | void {
+  static validateToken(req: Request, res: Response, next: NextFunction): Response | void {
     const { authorization } = req.headers;
 
     if (!authorization) {
       return res.status(401).json({ message: 'Token not found' });
     }
 
-    const token = authorization.split(' ')[1]; // token
+    const token = authorization.split(' ')[1]; // to get token
+
     try {
-      req.body.token = jwt.verify(token, this.secretKey);
+      console.log('é o token', token);
+      req.body.token = jwt.verify(token, 'jwt_secret');
+      next();
     } catch (err) {
       return res.status(401).json({ message: 'Token must be a valid token' });
     }
-    return next();
   }
 }
 
