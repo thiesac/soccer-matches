@@ -28,7 +28,7 @@ const arrayMatches = [
     },
     awayTeam: {
       id: 14,
-      teamName: "Another Team",
+      teamName: "Santos",
     },
   },
 ];

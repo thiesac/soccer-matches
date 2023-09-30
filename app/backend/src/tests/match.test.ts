@@ -1,36 +1,35 @@
-// import * as sinon from 'sinon';
-// import * as chai from 'chai';
-// // @ts-ignore
-// import chaiHttp = require('chai-http');
+import * as sinon from 'sinon';
+import * as chai from 'chai';
+// @ts-ignore
+import chaiHttp = require('chai-http');
+import { app } from '../app';
+import { Sequelize } from 'sequelize';
+import SequelizeMatches from '../database/models/SequelizeMatches';
+import mockMatches from './mocks/match.mock';
 
-// import { app } from '../app';
-// import { Response } from 'superagent';
-// import { Sequelize } from 'sequelize';
+chai.use(chaiHttp);
 
-// import SequelizeMatches from '../database/models/SequelizeMatches';
-// import mockMatches from './mocks/match.mock';
+const { expect } = chai;
 
-// chai.use(chaiHttp);
+afterEach(() => {
+  sinon.restore();
+});
 
-// const { expect } = chai;
+describe('MATCH', () => {
+  describe('Endpoint /matches', () => {
+    let findAllStub: sinon.SinonStub;
 
-// afterEach(() => {
-//   sinon.restore();
-// });
+    beforeEach(() => {
+      findAllStub = sinon.stub(SequelizeMatches, 'findAll');
+    })
 
-// describe('MATCH', () => {
-//   describe('Endpoint /matches', () => {
-//     let sequelizeStub;
+    it('Should return all matches', async() => {
+      findAllStub.resolves(mockMatches.arrayMatches);
 
-//     beforeEach(() => {
-//       sequelizeStub.sinon.stub(SequelizeMatches, 'findAll');
-//     })
-//     it('Should return all matches', async() => {
-//       sequelizeStub.resolves(mockMatches.arrayMatches);
+      const response = await chai.request(app).get('/matches')
 
-//       const { body }= await chai.request(app).get('/matches')
-
-//       expect(body).to.equal(mockMatches.arrayMatches)
-//     }) // IT
-//   }) // DESCRIBE ENDPOINT MATCHES
-// }) // OUTER DESCRIBE
+      expect(response.status).to.equal(200);
+      expect(response.body).to.deep.equal(mockMatches.arrayMatches)
+    }) // IT
+  }) // DESCRIBE ENDPOINT MATCHES
+}) // OUTER DESCRIBE
