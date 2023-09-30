@@ -1,6 +1,7 @@
 import * as express from 'express';
 import MatchController from '../controllers/match.controller';
 import MatchService from '../services/match.service';
+// import AuthMiddleware from '../middlewares/auth.middleware';
 
 const MatchRouter = express.Router();
 

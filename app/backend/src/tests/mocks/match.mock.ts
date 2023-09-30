@@ -7,9 +7,11 @@ const arrayMatches = [
     awayTeamGoals: 1,
     inProgress: false,
     homeTeam: {
+      id: 16,
       teamName: "São Paulo",
     },
     awayTeam: {
+      id: 8,
       teamName: "Grêmio",
     },
   },
@@ -21,9 +23,11 @@ const arrayMatches = [
     awayTeamGoals: 1,
     inProgress: false,
     homeTeam: {
-      teamName: "Some Team",
+      id: 9,
+      teamName: "Internacional",
     },
     awayTeam: {
+      id: 14,
       teamName: "Another Team",
     },
   },

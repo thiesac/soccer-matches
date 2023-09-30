@@ -10,6 +10,9 @@ class SequelizeMatches extends Model<IMatch> {
   public awayTeamId!: number;
   public awayTeamGoals!: number;
   public inProgress!: boolean;
+
+  public homeTeam!: SequelizeTeam;
+  public awayTeam!: SequelizeTeam;
 }
 
 SequelizeMatches.init(
@@ -20,11 +23,11 @@ SequelizeMatches.init(
       autoIncrement: true,
       allowNull: false,
     },
-    homeTeamGoals: {
+    homeTeamId: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    homeTeamId: {
+    homeTeamGoals: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
