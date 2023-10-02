@@ -37,19 +37,42 @@ describe('MATCH', () => {
 
       findAllStub.resolves(finishedMatches);
 
-      const response = await chai.request(app).get('/matches?finished=true');
+      const response = await chai.request(app).get('/matches?inProgress=true');
 
       expect(response.status).to.equal(200);
       expect(response.body).to.deep.equal(finishedMatches);
+      expect(response.body.every((match: any) => match.inProgress === false)).to.be.true;
     }); // IT
 
     it('Should return only inProgress matches', async () => {
       findAllStub.resolves(mockMatches.arrayInProgressMatches);
 
-      const response = await chai.request(app).get('/matches?finished=false');
+      const response = await chai.request(app).get('/matches?inProgress=false');
 
       expect(response.status).to.equal(200);
       expect(response.body).to.deep.equal(mockMatches.arrayInProgressMatches);
     }); // IT
+
+    describe('Endpoint /matches (POST)', () => {
+      let createStub: sinon.SinonStub;
+
+      beforeEach(() => {
+        createStub = sinon.stub(SequelizeMatches, 'create');
+      });
+
+      it('Should create a new match in progress and return it', async () => {
+        createStub.resolves({ ...mockMatches.newMatch, id: 70, inProgress: true });
+
+        const response = await chai.request(app).post('/matches').send(mockMatches.newMatch);
+
+        expect(response.status).to.equal(201)
+        // expect(response.body).to.have.property('id');
+        // expect(response.body.homeTeamId).to.equal(mockMatches.newMatch.homeTeamId);
+        // expect(response.body.awayTeamId).to.equal(mockMatches.newMatch.awayTeamId);
+        // expect(response.body.homeTeamGoals).to.equal(mockMatches.newMatch.homeTeamGoals);
+        // expect(response.body.awayTeamGoals).to.equal(mockMatches.newMatch.awayTeamGoals);
+        // expect(response.body.inProgress).to.equal(true);
+      })
+    }) // IT
   }) // DESCRIBE ENDPOINT MATCHES
 }) // OUTER DESCRIBE
