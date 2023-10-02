@@ -23,8 +23,8 @@ class MatchController {
   }
 
   async finishMatch(req: Request, res: Response) {
-    const { matchId } = req.params;
-    const numberId = Number(matchId);
+    const { id } = req.params;
+    const numberId = Number(id);
 
     await this.matchService.finishMatch(numberId);
 

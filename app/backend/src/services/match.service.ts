@@ -32,14 +32,14 @@ class MatchService {
     return data;
   }
 
-  public async finishMatch(matchId: number): Promise<void> {
-    const data = await this.matchModel.findByPk(matchId);
+  public async finishMatch(id: number): Promise<void> {
+    const data = await this.matchModel.findByPk(id);
 
     if (!data) {
       throw new Error('Match not found ');
     }
     data.inProgress = false;
-    await data.save();
+    await data.save({ fields: ['inProgress'] });
   }
 }
 

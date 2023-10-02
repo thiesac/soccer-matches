@@ -13,7 +13,6 @@ class AuthMiddleware {
     const token = authorization.split(' ')[1]; // to get token
 
     try {
-      console.log('é o token', token);
       req.body.token = jwt.verify(token, secretKey);
       next();
     } catch (err) {
