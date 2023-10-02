@@ -38,5 +38,11 @@ class MatchController {
     await this.matchService.updateMatch(Number(id), homeTeamGoals, awayTeamGoals);
     res.status(200).json({ message: 'Match updated' });
   }
+
+  async createMatch(req: Request, res: Response) {
+    const serviceResponse = await this.matchService.createMatch(req.body);
+    console.log('controller', serviceResponse);
+    res.status(201).json(serviceResponse);
+  }
 }
 export default MatchController;

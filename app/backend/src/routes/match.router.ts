@@ -21,4 +21,8 @@ MatchRouter.patch('/:id', AuthMiddleware.validateToken, (req, res) => {
   matchController.updateMatch(req, res);
 });
 
+MatchRouter.post('/', AuthMiddleware.validateToken, (req, res) => {
+  matchController.createMatch(req, res);
+});
+
 export default MatchRouter;

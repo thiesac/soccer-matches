@@ -1,6 +1,7 @@
 import SequelizeTeam from '../database/models/SequelizeTeam';
 import IMatch from '../Interfaces/IMatch';
 import MatchModel from '../database/models/SequelizeMatches';
+// import { NewEntity } from '../Interfaces';
 
 class MatchService {
   private matchModel = MatchModel;
@@ -42,6 +43,13 @@ class MatchService {
       homeTeamGoals,
       awayTeamGoals,
     }, { where: { id } });
+  }
+
+  public async createMatch(match: IMatch): Promise<IMatch> {
+    const matchWithInProgress = { ...match, inProgress: true };
+    const dbData = await this.matchModel.create(matchWithInProgress);
+    console.log('service', dbData);
+    return dbData;
   }
 }
 
