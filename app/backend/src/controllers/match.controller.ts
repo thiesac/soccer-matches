@@ -21,5 +21,14 @@ class MatchController {
     const allMatches = await this.matchService.getAll();
     return res.status(200).json(allMatches);
   }
+
+  async finishMatch(req: Request, res: Response) {
+    const { matchId } = req.params;
+    const numberId = Number(matchId);
+
+    await this.matchService.finishMatch(numberId);
+
+    res.status(200).json({ message: 'Finished' });
+  }
 }
 export default MatchController;

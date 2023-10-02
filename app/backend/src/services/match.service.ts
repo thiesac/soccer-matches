@@ -31,6 +31,16 @@ class MatchService {
     });
     return data;
   }
+
+  public async finishMatch(matchId: number): Promise<void> {
+    const data = await this.matchModel.findByPk(matchId);
+
+    if (!data) {
+      throw new Error('Match not found ');
+    }
+    data.inProgress = false;
+    await data.save();
+  }
 }
 
 export default MatchService;
