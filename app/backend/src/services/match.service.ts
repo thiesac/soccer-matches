@@ -6,10 +6,10 @@ class MatchService {
   private matchModel = MatchModel;
 
   public async getAll(inProgressFilter: boolean | undefined): Promise<IMatch[]> {
-    const whereCondition: { inProgree?: boolean } = {};
+    const whereCondition: { inProgress?: boolean } = {}; // initializes the object
 
     if (inProgressFilter !== undefined) {
-      whereCondition.inProgree = inProgressFilter;
+      whereCondition.inProgress = inProgressFilter;
     }
 
     const data = await this.matchModel.findAll({
