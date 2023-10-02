@@ -5,8 +5,18 @@ import MatchModel from '../database/models/SequelizeMatches';
 class MatchService {
   private matchModel = MatchModel;
 
-  public async getAll(inProgressFilter: boolean | undefined): Promise<IMatch[]> {
-    const whereCondition: { inProgress?: boolean } = {}; // initializes the object
+  public async getAll(): Promise<IMatch[]> {
+    const data = await this.matchModel.findAll({
+      include: [
+        { model: SequelizeTeam, as: 'homeTeam' },
+        { model: SequelizeTeam, as: 'awayTeam' },
+      ],
+    });
+    return data;
+  }
+
+  public async getFiltered(inProgressFilter: boolean | undefined): Promise<IMatch[]> {
+    const whereCondition: { inProgress?: boolean } = {};
 
     if (inProgressFilter !== undefined) {
       whereCondition.inProgress = inProgressFilter;
