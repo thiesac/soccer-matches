@@ -9,7 +9,9 @@ const matchService = new MatchService();
 const matchController = new MatchController(matchService);
 
 MatchRouter.get('/', (req, res) => {
-  matchController.getAll(req, res);
+  const inProgressFilter = req.query.inProgress === 'true';
+
+  matchController.getAll(req, res, inProgressFilter);
 });
 
 export default MatchRouter;
