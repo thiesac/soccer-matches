@@ -35,6 +35,14 @@ class MatchService {
   public async finishMatch(id: number): Promise<void> {
     await this.matchModel.update({ inProgress: false }, { where: { id } });
   }
+
+  public async updateMatch(id: number, homeTeamGoals: number, awayTeamGoals: number):
+  Promise<void> {
+    await this.matchModel.update({
+      homeTeamGoals,
+      awayTeamGoals,
+    }, { where: { id } });
+  }
 }
 
 export default MatchService;
