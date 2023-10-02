@@ -35,17 +35,6 @@ class MatchService {
   public async finishMatch(id: number): Promise<void> {
     await this.matchModel.update({ inProgress: false }, { where: { id } });
   }
-
-  // public async finishMatch(id: number): Promise<void> {
-  //   const data = await this.matchModel.findByPk(id);
-  //   console.log('linha 37', data);
-  //   if (!data) {
-  //     throw new Error('Match not found ');
-  //   }
-  //   data.inProgress = false;
-  //   const teste = await data.save({ fields: ['inProgress'] });
-  //   console.log('linha 43 service', teste);
-  // }
 }
 
 export default MatchService;
