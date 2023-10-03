@@ -1,3 +1,4 @@
+import SequelizeTeam from '../database/models/SequelizeTeam';
 import SequelizeMatches from '../database/models/SequelizeMatches';
 import { ILeaderboard } from '../Interfaces/ILeaderboard';
 import IMatch from '../Interfaces/IMatch';
@@ -16,14 +17,13 @@ class LeaderboardService {
     const completedMatches = await this.getCompletedMatches();
 
     const homeLeaderboard = await Promise.all(
-      completedMatches.map((match) => this.createLeaderboardEntry(match)),
+      completedMatches.map((match) => LeaderboardService.createLeaderboardEntry(match)),
     );
 
     return homeLeaderboard;
   }
 
   private async getCompletedMatches(): Promise<IMatch[]> {
-    // Use MatchService to fetch completed matches
     const completedMatches = await this.matchService.getFiltered(false);
     return completedMatches;
   }
@@ -42,7 +42,6 @@ class LeaderboardService {
   }
 
   private static calculateTotalGames(matches: IMatch[], teamId: number): number {
-    // Calculate total games played by a team
     return matches.reduce((totalGames, match) => {
       if (match.homeTeamId === teamId || match.awayTeamId === teamId) {
         return totalGames + 1;
@@ -52,7 +51,6 @@ class LeaderboardService {
   }
 
   private static calculateTotalVictories(matches: IMatch[], teamId: number): number {
-    // Calculate total victories for a team
     return matches.reduce((totalVictories, match) => {
       if (
         (match.homeTeamId === teamId && match.homeTeamGoals > match.awayTeamGoals)
@@ -65,7 +63,6 @@ class LeaderboardService {
   }
 
   private static calculateTotalDraws(matches: IMatch[], teamId: number): number {
-    // Calculate total draws for a team
     return matches.reduce((totalDraws, match) => {
       if (match.homeTeamGoals === match.awayTeamGoals
         && (match.homeTeamId === teamId || match.awayTeamId === teamId)) {
@@ -76,7 +73,6 @@ class LeaderboardService {
   }
 
   private static calculateTotalLosses(matches: IMatch[], teamId: number): number {
-    // Calculate total losses for a team
     return matches.reduce((totalLosses, match) => {
       if (
         (match.homeTeamId === teamId && match.homeTeamGoals < match.awayTeamGoals)
@@ -89,7 +85,6 @@ class LeaderboardService {
   }
 
   private static calculateGoalsFavor(matches: IMatch[], teamId: number): number {
-    // Calculate goals scored by a team
     return matches.reduce((totalGoalsFavor, match) => {
       if (match.homeTeamId === teamId) {
         return totalGoalsFavor + match.homeTeamGoals;
@@ -101,7 +96,6 @@ class LeaderboardService {
   }
 
   private static calculateGoalsOwn(matches: IMatch[], teamId: number): number {
-    // Calculate goals conceded by a team
     return matches.reduce((totalGoalsOwn, match) => {
       if (match.homeTeamId === teamId) {
         return totalGoalsOwn + match.awayTeamGoals;
@@ -112,18 +106,24 @@ class LeaderboardService {
     }, 0);
   }
 
-  private async createLeaderboardEntry(match: IMatch): Promise<ILeaderboard> {
+  private static async fetchTeamName(teamId: number): Promise<string> {
+    const team = await SequelizeTeam.findByPk(teamId);
+    return team ? team.teamName : '';
+  }
+
+  private static async createLeaderboardEntry(match: IMatch): Promise<ILeaderboard> {
     const totalPoints = LeaderboardService.calculateTotalPoints(match);
-    const teamId = match.homeTeamId; // Assuming you want the home team's ID
-    const totalGames = LeaderboardService.calculateTotalGames([match], teamId);
-    const totalVictories = LeaderboardService.calculateTotalVictories([match], teamId);
-    const totalDraws = LeaderboardService.calculateTotalDraws([match], teamId);
-    const totalLosses = LeaderboardService.calculateTotalLosses([match], teamId);
-    const goalsFavor = LeaderboardService.calculateGoalsFavor([match], teamId);
-    const goalsOwn = LeaderboardService.calculateGoalsOwn([match], teamId);
+    const totalGames = LeaderboardService.calculateTotalGames([match], match.homeTeamId);
+    const totalVictories = LeaderboardService.calculateTotalVictories([match], match.homeTeamId);
+    const totalDraws = LeaderboardService.calculateTotalDraws([match], match.homeTeamId);
+    const totalLosses = LeaderboardService.calculateTotalLosses([match], match.homeTeamId);
+    const goalsFavor = LeaderboardService.calculateGoalsFavor([match], match.homeTeamId);
+    const goalsOwn = LeaderboardService.calculateGoalsOwn([match], match.homeTeamId);
+
+    const teamName = await LeaderboardService.fetchTeamName(match.homeTeamId);
 
     return {
-      name: match.homeTeam.teamName, // Assuming you want the home team's name
+      name: teamName,
       totalPoints,
       totalGames,
       totalVictories,
