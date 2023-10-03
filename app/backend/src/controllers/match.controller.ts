@@ -41,8 +41,18 @@ class MatchController {
 
   async createMatch(req: Request, res: Response) {
     const serviceResponse = await this.matchService.createMatch(req.body);
-    console.log('controller', serviceResponse);
-    res.status(201).json(serviceResponse);
+
+    if ('error' in serviceResponse) {
+      if (serviceResponse.error === 'It is not possible to create a match with two equal teams') {
+        res.status(422)
+          .json({ message: 'It is not possible to create a match with two equal teams' });
+      } else if (serviceResponse.error === 'There is no team with such id!') {
+        res.status(404).json({ message: 'There is no team with such id!' });
+      }
+    } else {
+      res.status(201).json(serviceResponse);
+    }
   }
 }
+
 export default MatchController;

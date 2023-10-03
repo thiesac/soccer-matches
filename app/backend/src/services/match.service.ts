@@ -1,10 +1,13 @@
 import SequelizeTeam from '../database/models/SequelizeTeam';
 import IMatch from '../Interfaces/IMatch';
 import MatchModel from '../database/models/SequelizeMatches';
-// import { NewEntity } from '../Interfaces';
 
+interface ErrorResponse {
+  message: string;
+}
 class MatchService {
   private matchModel = MatchModel;
+  private sequelizeTeam = SequelizeTeam;
 
   public async getAll(): Promise<IMatch[]> {
     const data = await this.matchModel.findAll({
@@ -45,10 +48,19 @@ class MatchService {
     }, { where: { id } });
   }
 
-  public async createMatch(match: IMatch): Promise<IMatch> {
+  public async createMatch(match: IMatch): Promise<IMatch | ErrorResponse> {
+    const awayTeam = await this.sequelizeTeam.findByPk(Number(match.awayTeamId));
+    const homeTeam = await this.sequelizeTeam.findByPk(match.homeTeamId);
+
+    if (awayTeam === null || homeTeam === null) {
+      return { message: 'There is no team with such id!' };
+    }
+    if (awayTeam.id === homeTeam.id) {
+      return { message: 'It is not possible to create a match with two equal teams' };
+    }
+
     const matchWithInProgress = { ...match, inProgress: true };
     const dbData = await this.matchModel.create(matchWithInProgress);
-    console.log('service', dbData);
     return dbData;
   }
 }
