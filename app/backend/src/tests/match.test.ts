@@ -55,24 +55,37 @@ describe('MATCH', () => {
 
     describe('Endpoint /matches (POST)', () => {
       let createStub: sinon.SinonStub;
+      let validToken: string;
 
-      beforeEach(() => {
+      beforeEach(async() => {
         createStub = sinon.stub(SequelizeMatches, 'create');
+
+        const loginResponse = await chai
+          .request(app)
+          .post('/login')
+          .send({
+            email: 'admin@admin.com',
+            password: 'secret_admin',
+          });
+
+        validToken = loginResponse.body.token;
       });
 
       it('Should create a new match in progress and return it', async () => {
-        createStub.resolves({ ...mockMatches.newMatch, id: 70, inProgress: true });
+        console.log('Before createStub');
+        createStub.resolves({ ...mockMatches.newMatchBody, id: 70, inProgress: true });
+        console.log('After createStub');
 
-        const response = await chai.request(app).post('/matches').send(mockMatches.newMatch);
+        const response = await chai
+          .request(app)
+          .post('/matches')
+          .set('Authorization', `Bearer ${validToken}`)
+          .send(mockMatches.newMatchBody);
 
-        expect(response.status).to.equal(201)
-        // expect(response.body).to.have.property('id');
-        // expect(response.body.homeTeamId).to.equal(mockMatches.newMatch.homeTeamId);
-        // expect(response.body.awayTeamId).to.equal(mockMatches.newMatch.awayTeamId);
-        // expect(response.body.homeTeamGoals).to.equal(mockMatches.newMatch.homeTeamGoals);
-        // expect(response.body.awayTeamGoals).to.equal(mockMatches.newMatch.awayTeamGoals);
-        // expect(response.body.inProgress).to.equal(true);
-      })
-    }) // IT
+        console.log(response);
+        expect(response.status).to.equal(201);
+        expect(response.body).to.deep.equal(mockMatches.newMatchResult);
+      });
+    }); // IT
   }) // DESCRIBE ENDPOINT MATCHES
 }) // OUTER DESCRIBE

@@ -127,15 +127,25 @@ const arrayInProgressMatches = [
   }
 ]
 
-const newMatch = {
+const newMatchBody = {
   homeTeamId: 16,
   awayTeamId: 8,
-  homeTeamGoals: 2,
-  awayTeamGoals: 2,
+  homeTeamGoals: 4,
+  awayTeamGoals: 0,
+};
+
+const newMatchResult = {
+  homeTeamId: 16,
+  awayTeamId: 8,
+  homeTeamGoals: 4,
+  awayTeamGoals: 0,
+  inProgress: true,
+  id: 70,
 };
 
 export default {
   arrayMatches,
   arrayInProgressMatches,
-  newMatch,
+  newMatchBody,
+  newMatchResult,
 }
