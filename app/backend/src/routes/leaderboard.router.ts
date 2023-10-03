@@ -1,16 +1,17 @@
 import * as express from 'express';
-import LoginController from '../controllers/leaderboard.controller';
-// import LeaderboardService from '../services/leaderboard.service';
-// import SequelizeMatches from '../database/models/SequelizeMatches';
+import LeaderboardController from '../controllers/leaderboard.controller';
+import LeaderboardService from '../services/leaderboard.service';
+import SequelizeMatches from '../database/models/SequelizeMatches';
+import MatchService from '../services/match.service';
 
 const LeaderboardRouter = express.Router();
-
-// const sequelizeMatches = new SequelizeMatches();
-// const leaderboardService = new LeaderboardService(sequelizeMatches);
-const leaderboardController = new LoginController();
+const sequelizeMatches = new SequelizeMatches();
+const matchService = new MatchService();
+const leaderboardService = new LeaderboardService(sequelizeMatches, matchService);
+const leaderboardController = new LeaderboardController(leaderboardService);
 
 LeaderboardRouter.get('/home', (req, res) => {
-  leaderboardController.gerHomeLeaderboard(req, res);
+  leaderboardController.getHomeLeaderboard(req, res);
 });
 
 export default LeaderboardRouter;
