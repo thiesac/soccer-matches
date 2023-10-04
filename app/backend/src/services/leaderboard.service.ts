@@ -19,8 +19,25 @@ class LeaderboardService {
     const homeLeaderboard = await Promise.all(
       completedMatches.map((match) => LeaderboardService.createLeaderboardEntry(match)),
     );
+    return LeaderboardService.reduceTeam(homeLeaderboard);
+  }
 
-    return homeLeaderboard;
+  private static reduceTeam(leaderboard: ILeaderboard[]): ILeaderboard[] {
+    return leaderboard.reduce((acc, curr) => {
+      const findName = acc.find(({ name }) => name === curr.name);
+      if (!findName) acc.push(curr);
+      else {
+        findName.totalPoints += curr.totalPoints;
+        findName.totalGames += curr.totalGames;
+        findName.totalVictories += curr.totalVictories;
+        findName.totalDraws += curr.totalDraws;
+        findName.totalLosses += curr.totalLosses;
+        findName.goalsFavor += curr.goalsFavor;
+        findName.goalsOwn += curr.goalsOwn;
+      }
+      return acc
+        .map((element) => (element.name === findName?.name ? findName : element)) as ILeaderboard[];
+    }, [] as ILeaderboard[]);
   }
 
   private async getCompletedMatches(): Promise<IMatch[]> {
@@ -29,7 +46,6 @@ class LeaderboardService {
   }
 
   private static calculateTotalPoints(match: IMatch): number {
-    // Calculate total points for a team based on the match result
     if (match.homeTeamGoals > match.awayTeamGoals) {
       // Home team won the match
       return 3;
