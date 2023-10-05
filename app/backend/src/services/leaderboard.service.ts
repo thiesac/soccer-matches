@@ -19,7 +19,33 @@ class LeaderboardService {
     const homeLeaderboard = await Promise.all(
       completedMatches.map((match) => LeaderboardService.createLeaderboardEntry(match)),
     );
-    return LeaderboardService.reduceTeam(homeLeaderboard);
+
+    const sortedLeaderboard = LeaderboardService.sortLeaderboard(homeLeaderboard);
+
+    return sortedLeaderboard;
+  }
+
+  private static sortLeaderboard(leaderboard: ILeaderboard[]): ILeaderboard[] {
+    return leaderboard.sort((a, b) => {
+      // Sort by totalPoints
+      if (b.totalPoints !== a.totalPoints) {
+        return b.totalPoints - a.totalPoints;
+      }
+
+      // Sort by totalVictories
+      if (b.totalVictories !== a.totalVictories) {
+        return b.totalVictories - a.totalVictories;
+      }
+
+      // Sort by goalsBalance in ascending order (lower goals balance comes first)
+      //  nullish coalescing (??) operators to provide default values for goalsBalance in case they are undefined
+      if ((a.goalsBalance ?? 0) !== (b.goalsBalance ?? 0)) {
+        return (a.goalsBalance ?? 0) - (b.goalsBalance ?? 0);
+      }
+
+      // Sort by goalsFavor
+      return b.goalsFavor - a.goalsFavor;
+    });
   }
 
   private static reduceTeam(leaderboard: ILeaderboard[]): ILeaderboard[] {
@@ -127,6 +153,35 @@ class LeaderboardService {
     return team ? team.teamName : '';
   }
 
+  private static calculateEfficiency(matches: IMatch[], teamId: number): string {
+    const totalPoints = matches.reduce((acc, match) => {
+      if (match.homeTeamId === teamId || match.awayTeamId === teamId) {
+        return acc + LeaderboardService.calculateTotalPoints(match);
+      }
+      return acc;
+    }, 0);
+
+    if (totalPoints === 0) {
+      return '0.00';
+    }
+
+    const totalGames = LeaderboardService.calculateTotalGames(matches, teamId);
+    const efficiency = (totalPoints / (totalGames * 3)) * 100;
+
+    return efficiency.toFixed(2);
+  }
+
+  private static calculateGoalsBalance(matches: IMatch[], teamId: number): number {
+    return matches.reduce((goalsBalance, match) => {
+      if (match.homeTeamId === teamId) {
+        return goalsBalance + match.homeTeamGoals - match.awayTeamGoals;
+      } if (match.awayTeamId === teamId) {
+        return goalsBalance + match.awayTeamGoals - match.homeTeamGoals;
+      }
+      return goalsBalance;
+    }, 0);
+  }
+
   private static async createLeaderboardEntry(match: IMatch): Promise<ILeaderboard> {
     const totalPoints = LeaderboardService.calculateTotalPoints(match);
     const totalGames = LeaderboardService.calculateTotalGames([match], match.homeTeamId);
@@ -135,7 +190,8 @@ class LeaderboardService {
     const totalLosses = LeaderboardService.calculateTotalLosses([match], match.homeTeamId);
     const goalsFavor = LeaderboardService.calculateGoalsFavor([match], match.homeTeamId);
     const goalsOwn = LeaderboardService.calculateGoalsOwn([match], match.homeTeamId);
-
+    const goalsBalance = LeaderboardService.calculateGoalsBalance([match], match.homeTeamId);
+    const efficiency = LeaderboardService.calculateEfficiency([match], match.awayTeamId);
     const teamName = await LeaderboardService.fetchTeamName(match.homeTeamId);
 
     return {
@@ -147,6 +203,8 @@ class LeaderboardService {
       totalLosses,
       goalsFavor,
       goalsOwn,
+      goalsBalance,
+      efficiency,
     };
   }
 }
