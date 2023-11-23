@@ -1,8 +1,8 @@
 # TSC - The Soccer Club 
 
-TSC (The Soccer Club) is an informative website for football matches and standings! ⚽️
+TSC (The Soccer Club) is an informative website for soccer matches and standings! ⚽️
 
-In the development of TSC, I created a comprehensive backend API using Test-Driven Development (TDD) methodology. This API is designed to provide data for a football-related website. The frontend for this project was generously provided by Trybe.
+In the development of TSC, I created a comprehensive backend API using Test-Driven Development (TDD) methodology. This API is designed to provide data for a soccer-related website. The frontend for this project was generously provided by Trybe.
 
 ## Table of Contents
 
